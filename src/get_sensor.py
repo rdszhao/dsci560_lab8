@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 def get_data(month, day, year=2024, dur=24, keys='ts,latitude,longitude,BMP280 Barometer'):
 	load_dotenv()
 	THINGSBOARD_URL = os.getenv('THINGSBOARD_URL')
-	ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
 	DEV = os.getenv('DEVICE')
 
 	beg_time = datetime.datetime(year, month, day, 0, 0, 0) + datetime.timedelta(hours=7)
