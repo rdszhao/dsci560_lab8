@@ -1,6 +1,7 @@
 import os
 import requests
 import datetime
+import pandas as pd
 from dotenv import load_dotenv
 
 def get_data(month, day, year=2024, dur=24, keys='ts,latitude,longitude,BMP280 Barometer'):
@@ -32,4 +33,11 @@ def get_data(month, day, year=2024, dur=24, keys='ts,latitude,longitude,BMP280 B
 		url, headers={'Content-Type': 'application/json','X-Authorization': f'Bearer {jwt}'}
 	).json()
 
-	return data
+	del data['ts']
+
+	dfs = [pd.DataFrame(data[key]).rename(columns={'value': key}) for key in data.keys()]
+	df = pd.concat(dfs, axis=1, join='outer')
+	df = df.loc[:,~df.columns.duplicated()]
+	df = df.groupby('ts').first().reset_index()
+
+	return df
