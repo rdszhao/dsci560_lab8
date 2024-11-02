@@ -39,5 +39,7 @@ def get_data(month, day, year=2024, dur=24, keys='ts,latitude,longitude,BMP280 B
 	df = pd.concat(dfs, axis=1, join='outer')
 	df = df.loc[:,~df.columns.duplicated()]
 	df = df.groupby('ts').first().reset_index()
+	df = df.dropna()
+	df = df.applymap(lambda x: float(f"{x.split('.')[0]}.{x.split('.')[1]}") if not isinstance(x, (int, float)) else x)
 
 	return df
